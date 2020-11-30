@@ -46,6 +46,7 @@ const SubscriptionButton = styled.button`
     border: 1px solid #2b2e2b;
     background-color: #fff;
     text-transform: uppercase;
+    cursor: pointer
 `
 
 const CheckoutButton = styled.button`
@@ -60,6 +61,7 @@ const CheckoutButton = styled.button`
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+    cursor: pointer
 `
 
 

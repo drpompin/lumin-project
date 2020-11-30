@@ -8,44 +8,36 @@ import {
     ProductPriceAmount, 
     ProductPriceTitle, 
     ProductTitle 
-} from '../snippets/lumins'
+} from '../styles/lumins'
 
 
-class Product extends Component {
+const Product = (props) => {
     
+    console.log('product in product', props)
+    const BackgroundImage = props.product.image_url
 
-    
-    render () {
-        console.log('product in product', this.props)
-        // const { product } = {} || this.props.product
-        const BackgroundImage = this.props.product.image_url
+    return (
+        <ProductCard>
+            <ProductCardInner>
+                <ProductImage
+                    src={BackgroundImage}
+                />
 
+                <ProductTitle>{props.product.title}</ProductTitle>
+            </ProductCardInner>
 
-        return (
-            <ProductCard>
-                <ProductCardInner>
-                    <ProductImage
-                        src={BackgroundImage}
-                        // style={{
-                        //     backgroundImage: `url(${BackgroundImage})`
-                        // }}
-                     />
-
-                    <ProductTitle>{this.props.product.title}</ProductTitle>
-                </ProductCardInner>
-
-                <ProductPrice>
-                    <ProductPriceTitle>From: </ProductPriceTitle>
-                    <ProductPriceAmount>${this.props.product.price}</ProductPriceAmount>
-                </ProductPrice>
-                
-                <CardButton onClick={() => this.props.showCart()} >Add to Cart</CardButton>
-                
-                
-                
-            </ProductCard>
-        )
-    }
+            <ProductPrice>
+                <ProductPriceTitle>From: </ProductPriceTitle>
+                <ProductPriceAmount>${props.product.price}</ProductPriceAmount>
+            </ProductPrice>
+            
+            <CardButton onClick={
+                    () => props.showCart()
+                    // () => props.addToCart()
+                } 
+            >Add to Cart</CardButton>
+        </ProductCard>
+    )
 }
 
 
