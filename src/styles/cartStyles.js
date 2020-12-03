@@ -1,4 +1,4 @@
-import styled, { keyframes, css } from "styled-components";
+import styled from "styled-components";
 
 
 export const CartTop = styled.div`
@@ -82,7 +82,6 @@ export const CartItemBody = styled.div`
 export const ItemDescription = styled.div`
     color: #1e2d2b;
     width: 65%;
-    /* line-height: 18px; */
     font-size: 10px;
     padding: 15px 13px 13px 21px;
     letter-spacing: 0.02px;
@@ -109,7 +108,6 @@ export const ItemImage = styled.img`
     max-width: 100%;
     display: block;
     width: 50;
-    /* vertical-align: middle; */
 `
 
 export const CartItemTitle = styled.h6`

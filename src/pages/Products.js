@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-// import { useReactiveVar } from '@apollo/react-hooks'
 
 import {
 	BaseDiv,
@@ -34,12 +33,10 @@ const GET_ALL_PRODUCTS = gql`
 `
 
 function ProductsPage() {
-	// const cartItems = useReactiveVar(cartVar)
 
 	const [state, setState] = useState(false)
 
 	const showCart = () => {
-		console.log('Showcart function working')
 		setState(true)
 	}
 
@@ -47,30 +44,31 @@ function ProductsPage() {
 		setState(false)
 	}
 
-	
+	const addToCart = (product) => {
+		const addedItems = cartVar()
 
-	// const addToCart = (item) => {
-	// 	cartVar({ ...cartVar(), item });
-	// };
+		// equate added item to a constant addedItem
+		const addedItem = addedItems.find(item => item.id === product.id)
+		console.log('addedItem===', addedItem)
+		console.log('addedItems===', addedItems)
 
-	// const increaseQty = (id) => {
-	// 	const qty = cartVar()[id].qty + 1;
-	// 	cartVar({ ...cartVar(), [id]: { ...cartVar().id, qty } });
-	// };
+		// Check if item has already been added to the cart,
+		if (addedItem) {
+			// If item has already been added to the cart, increase the item qty and item amount
+			product.qty += 1
+			product.amount = product.qty * product.price
 
-	// const handleCartOperation = ({ id, title, image_url, price }) => {
-	// 		cartItems[id]
-	// 		? increaseQty(id)
-	// 		: addToCart({ id, title, qty: 1, price, image_url });
-	// };
-
-	// products.map(({ id, title, img, price }) => (
-	// 	<button onClick={handleCartOperation({ id, title, img, price })}>
-	// 		Add to cart
-	// 	</button>
-	// ));
-
-
+			cartVar([...cartVar()])
+		} else {
+			// If item doesn't yet exist in the cart, se item qty to 1 and item amount = default item price
+			product.qty = 1
+			product.amount = product.price
+			cartVar([...cartVar(), product])
+		}
+		
+		const itemList = cartVar();
+		console.log('itemList===', itemList)
+	}
 
 
 	const { data, loading, error } = useQuery(GET_ALL_PRODUCTS)
@@ -92,26 +90,25 @@ function ProductsPage() {
 
 				<ProductsContainer>
 					{
-						data && data.products.map(({ id, title, price, image_url }) => {
+						data && data.products.map(product => {
 							return (
-								<ProductCard>
+								<ProductCard id={product.id} key={product.id}>
 									<ProductCardInner>
 										<ProductImage
-											src={image_url}
+											src={product.image_url}
 										/>
 
-										<ProductTitle>{title}</ProductTitle>
+										<ProductTitle>{product.title}</ProductTitle>
 									</ProductCardInner>
 
 									<ProductPrice>
 										<ProductPriceTitle>From: </ProductPriceTitle>
-										<ProductPriceAmount>${price}</ProductPriceAmount>
+										<ProductPriceAmount>${product.price}</ProductPriceAmount>
 									</ProductPrice>
 
 									<CardButton onClick={() => {
 										showCart()
-										// handleCartOperation({ id, title, price, image_url })
-										cartVar([...cartVar(), { id, title, price, image_url }])
+										addToCart(product)
 									}}>
 										Add to Cart
 									</CardButton>
@@ -128,8 +125,6 @@ function ProductsPage() {
 
 						<Cart
 							hideCart={hideCart}
-						// cart={this.state.cart} 
-						// onDelete={this.handleDelete}
 						/>
 					</>)
 

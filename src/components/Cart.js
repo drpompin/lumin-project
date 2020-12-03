@@ -30,8 +30,40 @@ import { cartVar } from '../index'
 
 
 function Cart(props) {
-
     const cartItems = useReactiveVar(cartVar)
+
+    const increaseItemQty = (id) => {
+        // get a quote of all cart items
+        const addedItems = cartVar()
+
+        // find the newly added item by id
+        const addedItem = addedItems.find(item => item.id === id)
+
+        // increase newly added item quantity and price
+        addedItem.qty += 1
+        addedItem.amount = addedItem.price * addedItem.qty
+
+        cartVar([...cartVar()])
+    }
+
+    const decreaseItemQty = (id) => {
+        const addedItems = cartVar()
+        const addedItem = addedItems.find(item => item.id === id)
+
+        if (addedItem.qty === 1) {
+            deleteItem(id)
+        } else {
+            addedItem.qty -= 1
+            addedItem.amount -= addedItem.price
+
+            cartVar([...cartVar()])
+        }
+    }
+
+    const deleteItem = (id) => {
+        const cartList = [...cartVar()]
+        cartVar(cartList.filter(item => item.id !== id))
+    }
 
     return (
         <CartDiv>
@@ -56,24 +88,34 @@ function Cart(props) {
                     {cartItems.length === 0 ? (
                         <p>No items in your cart</p>
                     ) : (
-                            cartItems.map(({ id, title, price, image_url }) => {
+                            cartItems.map(({ id, title, price, image_url, qty, amount }) => {
                             return (
                                 <CartItemBody id={id} key={id} >
-                                    <DeleteButton>x</DeleteButton>
+                                    <DeleteButton
+                                        onClick={() => deleteItem(id)}
+                                    >x</DeleteButton>
 
                                     <ItemDescription>
                                         <CartItemTitle>{title}</CartItemTitle>
 
                                         <CartQuantity>
                                             <CartQuantitySelector>
-                                                <CartQuantityDecrease>-</CartQuantityDecrease>
+                                                <CartQuantityDecrease
+                                                    onClick={() => decreaseItemQty(id)}
+                                                >
+                                                    -
+                                                </CartQuantityDecrease>
 
-                                                <CartItemQuantity>1</CartItemQuantity>
+                                                <CartItemQuantity>{Number(qty)} </CartItemQuantity>
 
-                                                <CartQuantityIncrease>+</CartQuantityIncrease>
+                                                <CartQuantityIncrease
+                                                    onClick={() => increaseItemQty(id)}
+                                                >
+                                                    +
+                                                </CartQuantityIncrease>
                                             </CartQuantitySelector>
 
-                                            <CartItemPrice>${price}</CartItemPrice>
+                                            <CartItemPrice>${amount}</CartItemPrice>
                                         </CartQuantity>
                                     </ItemDescription>
 
